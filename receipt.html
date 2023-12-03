@@ -5,14 +5,15 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Caveat&display=swap" rel="stylesheet">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
     <style>
         body {
             text-align: center;
-            font-family: Arial, sans-serif; /* Change the font, if desired */
-            margin-bottom: 50px; /* Space at the bottom */
+            font-family: Arial, sans-serif;
+            margin-bottom: 50px;
         }
-
-
     </style>
 </head>
 <body>
@@ -23,32 +24,30 @@
 
         <!-- Hidden input to store total amount -->
         <input type="hidden" id="totalAmountField" name="totalAmount" value="0">
+        <!-- Hidden input for email body -->
+        <input type="hidden" id="emailBody" name="emailBody">
 
         <!-- Submit button -->
         <button type="submit" class="submit-button">Submit</button>
     </form>
 
     <script>
-        
         window.onload = function() {
             const items = JSON.parse(localStorage.getItem('selectedItems')) || [];
             let itemListHtml = '';
+            let emailBody = 'Itemized Receipt:\n';
 
-            items.forEach(item => {
-                itemListHtml += `<li>${item.itemName} - $${item.price.toFixed(2)}</li>`;
+            items.forEach((item, index) => {
+                let itemEntry = `${item.itemName} - $${item.price.toFixed(2)}`;
+                itemListHtml += `<li>${itemEntry}</li>`;
+                emailBody += `Item ${index + 1}: ${itemEntry}\n`;
             });
 
             document.getElementById('item-list').innerHTML = itemListHtml;
             const totalAmount = parseFloat(localStorage.getItem('totalAmount')) || 0;
             document.getElementById('total-display').textContent = 'Total: $' + totalAmount.toFixed(2);
             document.getElementById('totalAmountField').value = totalAmount.toFixed(2);
-}
-
-        // function to clear the localStorage
-        function resetSelections() {
-        localStorage.removeItem('items'); // Adjust this to your localStorage key
-        localStorage.removeItem('totalAmount');
-        // Add more if there are other items to clear
+            document.getElementById('emailBody').value = emailBody;
         }
     </script>
 </body>
